@@ -34,10 +34,13 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.randomize = new System.Windows.Forms.Button();
+            this.bRandomize = new System.Windows.Forms.Button();
             this.generalTab = new System.Windows.Forms.TabPage();
+            this.cDummy = new System.Windows.Forms.CheckBox();
+            this.labelSettingString = new System.Windows.Forms.Label();
+            this.tbSettingsString = new System.Windows.Forms.TextBox();
             this.seedLabel = new System.Windows.Forms.Label();
-            this.seedField = new System.Windows.Forms.TextBox();
+            this.tbSeed = new System.Windows.Forms.TextBox();
             this.customPatchCheckBox = new System.Windows.Forms.CheckBox();
             this.customPatchPath = new System.Windows.Forms.TextBox();
             this.browsePatchButton = new System.Windows.Forms.Button();
@@ -64,7 +67,7 @@
             this.statusText});
             this.statusStrip1.Location = new System.Drawing.Point(0, 294);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(390, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(383, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip";
             // 
@@ -79,7 +82,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(390, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(383, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -98,20 +101,22 @@
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
-            // randomize
+            // bRandomize
             // 
-            this.randomize.Location = new System.Drawing.Point(19, 268);
-            this.randomize.Name = "randomize";
-            this.randomize.Size = new System.Drawing.Size(75, 23);
-            this.randomize.TabIndex = 2;
-            this.randomize.Text = "Randomize";
-            this.randomize.UseVisualStyleBackColor = true;
-            this.randomize.Click += new System.EventHandler(this.Randomize_Click);
+            this.bRandomize.Location = new System.Drawing.Point(19, 268);
+            this.bRandomize.Name = "bRandomize";
+            this.bRandomize.Size = new System.Drawing.Size(75, 23);
+            this.bRandomize.TabIndex = 2;
+            this.bRandomize.Text = "Randomize";
+            this.bRandomize.UseVisualStyleBackColor = true;
+            this.bRandomize.Click += new System.EventHandler(this.bRandomize_Click);
             // 
             // generalTab
             // 
+            this.generalTab.Controls.Add(this.labelSettingString);
+            this.generalTab.Controls.Add(this.tbSettingsString);
             this.generalTab.Controls.Add(this.seedLabel);
-            this.generalTab.Controls.Add(this.seedField);
+            this.generalTab.Controls.Add(this.tbSeed);
             this.generalTab.Controls.Add(this.customPatchCheckBox);
             this.generalTab.Controls.Add(this.customPatchPath);
             this.generalTab.Controls.Add(this.browsePatchButton);
@@ -126,21 +131,53 @@
             this.generalTab.Text = "General";
             this.generalTab.UseVisualStyleBackColor = true;
             // 
+            // cDummy
+            // 
+            this.cDummy.AutoSize = true;
+            this.cDummy.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cDummy.Enabled = false;
+            this.cDummy.Location = new System.Drawing.Point(468, 245);
+            this.cDummy.Name = "cDummy";
+            this.cDummy.Size = new System.Drawing.Size(79, 17);
+            this.cDummy.TabIndex = 9;
+            this.cDummy.Text = "Ignore This";
+            this.cDummy.UseVisualStyleBackColor = true;
+            this.cDummy.Visible = false;
+            // 
+            // labelSettingString
+            // 
+            this.labelSettingString.AutoSize = true;
+            this.labelSettingString.Location = new System.Drawing.Point(29, 39);
+            this.labelSettingString.Name = "labelSettingString";
+            this.labelSettingString.Size = new System.Drawing.Size(48, 13);
+            this.labelSettingString.TabIndex = 14;
+            this.labelSettingString.Text = "Settings:";
+            // 
+            // tbSettingsString
+            // 
+            this.tbSettingsString.Location = new System.Drawing.Point(100, 36);
+            this.tbSettingsString.Name = "tbSettingsString";
+            this.tbSettingsString.Size = new System.Drawing.Size(100, 20);
+            this.tbSettingsString.TabIndex = 13;
+            // 
             // seedLabel
             // 
             this.seedLabel.AutoSize = true;
-            this.seedLabel.Location = new System.Drawing.Point(6, 13);
+            this.seedLabel.Location = new System.Drawing.Point(29, 13);
             this.seedLabel.Name = "seedLabel";
             this.seedLabel.Size = new System.Drawing.Size(35, 13);
             this.seedLabel.TabIndex = 12;
             this.seedLabel.Text = "Seed:";
             // 
-            // seedField
+            // tbSeed
             // 
-            this.seedField.Location = new System.Drawing.Point(47, 10);
-            this.seedField.Name = "seedField";
-            this.seedField.Size = new System.Drawing.Size(100, 20);
-            this.seedField.TabIndex = 10;
+            this.tbSeed.Location = new System.Drawing.Point(100, 10);
+            this.tbSeed.Name = "tbSeed";
+            this.tbSeed.Size = new System.Drawing.Size(100, 20);
+            this.tbSeed.TabIndex = 10;
+            this.tbSeed.Enter += new System.EventHandler(this.tbSeed_Enter);
+            this.tbSeed.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbSeed_KeyDown);
+            this.tbSeed.Leave += new System.EventHandler(this.tbSeed_Leave);
             // 
             // customPatchCheckBox
             // 
@@ -205,7 +242,6 @@
             // mainTabs
             // 
             this.mainTabs.Controls.Add(this.generalTab);
-            //this.mainTabs.Controls.Add(this.generatedTab);
             this.mainTabs.Location = new System.Drawing.Point(9, 27);
             this.mainTabs.Name = "mainTabs";
             this.mainTabs.SelectedIndex = 0;
@@ -279,9 +315,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 316);
+            this.ClientSize = new System.Drawing.Size(383, 316);
+            this.Controls.Add(this.cDummy);
             this.Controls.Add(this.mainTabs);
-            this.Controls.Add(this.randomize);
+            this.Controls.Add(this.bRandomize);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -308,7 +345,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.Button randomize;
+        private System.Windows.Forms.Button bRandomize;
         private System.Windows.Forms.ToolStripStatusLabel statusText;
         private System.Windows.Forms.TabPage generalTab;
         private System.Windows.Forms.TextBox customLogicPath;
@@ -319,13 +356,16 @@
         private System.Windows.Forms.TextBox customPatchPath;
         private System.Windows.Forms.Button browsePatchButton;
         private System.Windows.Forms.Label seedLabel;
-        private System.Windows.Forms.TextBox seedField;
+        private System.Windows.Forms.TextBox tbSeed;
         private System.Windows.Forms.TabPage generatedTab;
         private System.Windows.Forms.Button saveSpoilerButton;
         private System.Windows.Forms.Button savePatchButton;
         private System.Windows.Forms.Button saveRomButton;
         private System.Windows.Forms.Label generatedSeedLabel;
         private System.Windows.Forms.Label generatedSeedValue;
+        private System.Windows.Forms.Label labelSettingString;
+        private System.Windows.Forms.TextBox tbSettingsString;
+        private System.Windows.Forms.CheckBox cDummy;
     }
 }
 

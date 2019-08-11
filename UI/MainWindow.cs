@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MinishRandomizer.Randomizer.Settings;
 using MinishRandomizer.Core;
 using MinishRandomizer.Randomizer;
 
@@ -19,21 +20,85 @@ namespace MinishRandomizer
         private ROM ROM_;
         private Shuffler shuffler;
         private bool randomized;
+        private bool _isUpdating = false;
+        public int _seedOld = 0;
+        private string _oldSettingsString = "";
+
+        public SettingsObject _settings { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-
-            // Initialize seed to random value
-            seedField.Text = new Random().Next().ToString();
+            InitializeSettings();
         }
+
+        private void tbSeed_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                int seed = Convert.ToInt32(tbSeed.Text);
+                if (seed < 0)
+                {
+                    seed = Math.Abs(seed);
+                    tbSeed.Text = seed.ToString();
+                    MessageBox.Show("Seed must be positive",
+                        "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    _settings.Seed = seed;
+                }
+            }
+            catch
+            {
+                tbSeed.Text = _seedOld.ToString();
+                MessageBox.Show("Invalid seed: must be a positive integer.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
+            UpdateSettingsString();
+            _isUpdating = false;
+        }
+
+        private void tbSeed_Enter(object sender, EventArgs e)
+        {
+            _seedOld = Convert.ToInt32(tbSeed.Text);
+            _isUpdating = true;
+        }
+
+        private void tbSeed_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                cDummy.Select();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LoadRom();
         }
 
-        private void Randomize_Click(object sender, EventArgs e)
+        private void bRandomize_Click(object sender, EventArgs e)
+        {
+            randomize();
+        }
+
+        private void randomize()
         {
             if (ROM_ == null)
             {
@@ -53,7 +118,7 @@ namespace MinishRandomizer
 
             try
             {
-                if (int.TryParse(seedField.Text, out int seed))
+                if (int.TryParse(tbSeed.Text, out int seed))
                 {
                     if (customLogicCheckBox.Checked)
                     {
@@ -64,7 +129,7 @@ namespace MinishRandomizer
                         shuffler.LoadLocations();
                     }
 
-                    
+
                     shuffler.RandomizeLocations(seed);
                 }
                 else
@@ -90,6 +155,27 @@ namespace MinishRandomizer
                 MessageBox.Show(error.Message);
             }
         }
+
+        private void UpdateSingleSetting(Action update)
+        {
+            if (_isUpdating)
+            {
+                return;
+            }
+
+            _isUpdating = true;
+
+            update?.Invoke();
+            UpdateSettingsString();
+
+            _isUpdating = false;
+        }
+
+        private void UpdateSettingsString() // TODO 
+        {
+            tbSettingsString.Text = _settings.ToString();
+        }
+
 
         private void LoadRom()
         {
@@ -260,5 +346,27 @@ namespace MinishRandomizer
             string spoilerLog = shuffler.GetSpoiler();
             File.WriteAllText(sfd.FileName, spoilerLog);
         }
+
+        public void InitializeSettings()
+        {
+            _settings = new SettingsObject();
+            _settings.Seed = Math.Abs(Environment.TickCount);
+
+            // Checkboxes go here
+
+
+
+            // Checkboxes end here
+
+            _settings.Seed = Math.Abs(Environment.TickCount);
+            tbSeed.Text = _settings.Seed.ToString();
+
+            var oldSettingsString = tbSeed.Text;
+            UpdateSettingsString();
+            _oldSettingsString = oldSettingsString;
+
+        }
     }
+
+
 }
