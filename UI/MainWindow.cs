@@ -32,59 +32,6 @@ namespace MinishRandomizer
             InitializeSettings();
         }
 
-        private void tbSeed_Leave(object sender, EventArgs e)
-        {
-            try
-            {
-                int seed = Convert.ToInt32(tbSeed.Text);
-                if (seed < 0)
-                {
-                    seed = Math.Abs(seed);
-                    tbSeed.Text = seed.ToString();
-                    MessageBox.Show("Seed must be positive",
-                        "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
-                {
-                    _settings.Seed = seed;
-                }
-            }
-            catch
-            {
-                tbSeed.Text = _seedOld.ToString();
-                MessageBox.Show("Invalid seed: must be a positive integer.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            };
-            UpdateSettingsString();
-            _isUpdating = false;
-        }
-
-        private void tbSeed_Enter(object sender, EventArgs e)
-        {
-            _seedOld = Convert.ToInt32(tbSeed.Text);
-            _isUpdating = true;
-        }
-
-        private void tbSeed_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-            {
-                cDummy.Select();
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -171,9 +118,11 @@ namespace MinishRandomizer
             _isUpdating = false;
         }
 
-        private void UpdateSettingsString() // TODO 
+
+        private void UpdateSettingsString()
         {
             tbSettingsString.Text = _settings.ToString();
+            this.SeedPreview.Text = "Setting String: " + _settings.ToString();
         }
 
 
@@ -209,6 +158,99 @@ namespace MinishRandomizer
 
             shuffler = new Shuffler(Path.GetDirectoryName(ROM.Instance.path));
         }
+
+
+
+        private void tbSettingsString_Enter(object sender, EventArgs e)
+        {
+            _oldSettingsString = tbSettingsString.Text;
+        }
+
+        private void tbSettingsString_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                cDummy.Select();
+            };
+        }
+
+        private void tbSettingsString_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                _settings.Update(tbSettingsString.Text);
+                UpdateCheckboxes();
+                //ToggleCheckBoxes(); //TODO
+                tbSettingsString.Text = _settings.ToString();
+            }
+            catch
+            {
+                tbSettingsString.Text = _oldSettingsString;
+                _settings.Update(_oldSettingsString);
+                MessageBox.Show("Settings string is invalid; reverted to previous settings.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+
+            _isUpdating = false;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        private void tbSeed_Enter(object sender, EventArgs e)
+        {
+            _seedOld = Convert.ToInt32(tbSeed.Text);
+        }
+
+        private void tbSeed_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                cDummy.Select();
+            }
+        }
+
+        private void tbSeed_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                int seed = Convert.ToInt32(tbSeed.Text);
+                if (seed < 0)
+                {
+                    seed = Math.Abs(seed);
+                    tbSeed.Text = seed.ToString();
+                    MessageBox.Show("Seed must be positive",
+                        "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    _settings.Seed = seed;
+                }
+            }
+            catch
+            {
+                tbSeed.Text = _seedOld.ToString();
+                MessageBox.Show("Invalid seed: must be a positive integer.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
+            UpdateSettingsString();
+        }
+
+
+        private void cShop_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSingleSetting(() => _settings.AddShopItems = cShop.Checked);
+        }
+
+
 
         private void CustomLogicCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -347,16 +389,24 @@ namespace MinishRandomizer
             File.WriteAllText(sfd.FileName, spoilerLog);
         }
 
+
+
+        private void UpdateCheckboxes()
+        {
+            cShop.Checked = _settings.AddShopItems;
+
+        }
+
+
         public void InitializeSettings()
         {
             _settings = new SettingsObject();
-            _settings.Seed = Math.Abs(Environment.TickCount);
-
-            // Checkboxes go here
 
 
+            cShop.Checked = false;
 
-            // Checkboxes end here
+            _settings.AddShopItems = false;
+
 
             _settings.Seed = Math.Abs(Environment.TickCount);
             tbSeed.Text = _settings.Seed.ToString();

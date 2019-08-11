@@ -31,6 +31,25 @@ namespace MinishRandomizer.Randomizer.Settings
             }
         }
 
+        public void Update(string settings)
+        {
+            var parts = settings.Split('-')
+                .Select(p => Base36Utils.Decode(p))
+                .ToArray();
+
+            if (parts.Any(p => p > int.MaxValue))
+            {
+                throw new ArgumentException(nameof(settings));
+            }
+
+            int part1 = (int)parts[0];
+            int part2 = (int)parts[1];
+
+            AddShopItems = (part1 & 1) > 0;
+            AddFigurines = (part1 & 2) > 0;
+
+        }
+
         private int[] BuildSettingsBytes()
         {
             int[] parts = new int[2];
@@ -43,10 +62,6 @@ namespace MinishRandomizer.Randomizer.Settings
             return parts;
         }
 
-
-
-
-
         private string EncodeSettings()
         {
             var partsEncoded = BuildSettingsBytes()
@@ -55,7 +70,6 @@ namespace MinishRandomizer.Randomizer.Settings
 
             return string.Join("-", partsEncoded); // Future Proofing
         }
-
 
         public override string ToString()
         {
