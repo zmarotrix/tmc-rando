@@ -60,7 +60,7 @@ AccessEastField; Helper;; (|Helpers.CanDestroyTrees, Items.Ocarina)
 SouthKeeseCave; Minor; 32-13-00; Items.BombBag
 AboveHPHole; Minor; 27-00-00; Locations.AccessEastField, (|Items.Ocarina, Items.LonLonKey, Items.RocsCape), (|Items.PacciCane, Items.RocsCape)
 LonLonPot; Half; 0F2C9B; Locations.AccessEastField
-LonLonCave; Major; 32-0C-00; (|Items.Ocarina, Items.LonLonKey, Items.RocsCape), Helpers.CanSplit2;
+LonLonCave; Major; 32-0C-00; (|Items.Ocarina, Items.LonLonKey, Items.RocsCape), Helpers.CanSplit2; Items.Bottle1 #Temp
 MinishRupeeFairy; Major; 00B7B4; Locations.AccessEastField, Items.PacciCane
 
 AccessWestField; Helper;; (|Items.RocsCape, (&Helpers.HasSword, Items.SpinAttack), Items.Flippers, (&Items.BombBag, Helpers.CanSplit3))
@@ -269,6 +269,7 @@ CompletePalace:Palace; Helper;; Locations.AccessPalace, Items.RocsCape, Items.Pa
 #Unrandomized locations
 
 #StockWellDogfood; Major; NON-STANDARD; (|Items.PacciCane, Items.Flippers, Items.RocsCape) #23-00
+#LibraryMinish; Minor 00E7BE; Items.HyruleanBestiary, Items.PicoriLegend, Items.MaskHistory, Items.Ocarina
 
 #Obscure locations
 #WildsSunkenKinstoneTop; Minor; NON-STANDARD #04-00
